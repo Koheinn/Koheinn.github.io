@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Koheinn's Portfolio</title>
+  <title>Heinn Htet Zan's Portfolio</title>
   <style>
     /* Reset and base */
     *, *::before, *::after {
@@ -12,22 +12,23 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #e0eafc, #cfdef3);
+      background: linear-gradient(135deg, #f0f4ff, #d0e0ff);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      color: #333;
+      color: #222;
       line-height: 1.6;
     }
 
     header {
-      background-color: #2a52be;
+      background: linear-gradient(135deg, #4f6ef7, #2a52be);
       color: white;
       text-align: center;
-      padding: 3rem 1rem 4rem;
+      padding: 3rem 1rem 5rem;
       position: relative;
       clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
-      box-shadow: 0 8px 20px rgba(42, 82, 190, 0.3);
+      box-shadow: 0 8px 30px rgba(42, 82, 190, 0.4);
+      user-select: none;
     }
     header img {
       width: 160px;
@@ -35,27 +36,28 @@
       border-radius: 50%;
       border: 5px solid white;
       object-fit: cover;
-      box-shadow: 0 0 15px rgba(0,0,0,0.25);
+      box-shadow: 0 0 20px rgba(0,0,0,0.35);
       margin-bottom: 1rem;
-      transition: transform 0.3s ease;
+      transition: transform 0.35s ease;
+      cursor: default;
     }
     header img:hover {
-      transform: scale(1.05) rotate(3deg);
+      transform: scale(1.1) rotate(3deg);
     }
     header h1 {
-      font-size: 2.8rem;
+      font-size: 3rem;
       margin: 0.25rem 0 0.5rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.25);
     }
     header p {
       font-style: italic;
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       max-width: 600px;
       margin: 0 auto;
-      color: #dce6f1;
-      text-shadow: 0 0 3px rgba(0,0,0,0.1);
+      color: #c9d8ff;
+      text-shadow: 0 0 6px rgba(0,0,0,0.1);
     }
 
     main {
@@ -69,104 +71,127 @@
       margin-bottom: 4rem;
     }
     section h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      border-left: 6px solid #2a52be;
-      padding-left: 0.5rem;
-      color: #1b327a;
+      font-size: 2.1rem;
+      margin-bottom: 1.2rem;
+      border-left: 8px solid #4f6ef7;
+      padding-left: 0.7rem;
+      color: #2a3f87;
       text-transform: uppercase;
-      letter-spacing: 1.2px;
-      font-weight: 700;
+      letter-spacing: 1.3px;
+      font-weight: 800;
       user-select: none;
     }
 
-    /* Skills container */
+    /* Skills filter container */
     #skills {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 14px;
       justify-content: center;
+      margin-bottom: 1rem;
     }
     .skill-badge {
-      background: #2a52be;
+      background: #4f6ef7;
       color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      box-shadow: 0 3px 10px rgba(42,82,190,0.4);
-      transition: background-color 0.3s ease;
-      cursor: default;
+      padding: 0.6rem 1.3rem;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0 4px 15px rgba(79,110,247,0.5);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      cursor: pointer;
       user-select: none;
+      border: 2.5px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .skill-badge:hover {
-      background-color: #1b327a;
+      background-color: #3e5bce;
+      transform: scale(1.1);
+    }
+    .skill-badge.selected {
+      background-color: #ff6f61;
+      border-color: #e65b4e;
+      box-shadow: 0 0 20px #ff6f61aa;
+      color: white;
+    }
+    .skill-badge.selected:hover {
+      background-color: #e65b4e;
+      transform: scale(1.15);
+      box-shadow: 0 0 30px #e65b4ecc;
     }
 
     /* Repositories grid */
     #repos {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2.3rem;
     }
     .repo-card {
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 10px 20px rgba(42,82,190,0.12);
+      border-radius: 16px;
+      box-shadow: 0 15px 30px rgba(79,110,247,0.12);
       display: flex;
       flex-direction: column;
-      padding: 1.5rem;
-      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      padding: 1.7rem 1.6rem;
+      transition: box-shadow 0.35s ease, transform 0.35s ease;
       cursor: pointer;
       user-select: none;
+      border: 2px solid transparent;
+      min-height: 90px;
+      justify-content: center;
+      text-align: center;
     }
     .repo-card:hover {
-      box-shadow: 0 20px 30px rgba(42,82,190,0.25);
-      transform: translateY(-5px);
+      box-shadow: 0 25px 40px rgba(79,110,247,0.3);
+      transform: translateY(-6px);
+      border-color: #4f6ef7;
     }
     .repo-card h5 {
-      margin: 0 0 0.75rem;
-      font-size: 1.3rem;
-      color: #2a52be;
-      font-weight: 700;
+      margin: 0;
+      font-size: 1.4rem;
+      color: #4f6ef7;
+      font-weight: 800;
       user-select: text;
+      transition: color 0.25s ease;
     }
     .repo-card h5 a {
       color: inherit;
       text-decoration: none;
-      transition: color 0.2s ease;
     }
     .repo-card h5 a:hover {
-      color: #1b327a;
+      color: #ff6f61;
       text-decoration: underline;
-    }
-    .repo-card p {
-      margin: 0;
-      color: #555;
-      font-size: 1rem;
-      flex-grow: 1;
-      user-select: text;
     }
 
     /* Footer */
     footer {
-      background-color: #2a52be;
+      background: linear-gradient(135deg, #4f6ef7, #2a52be);
       color: white;
       text-align: center;
-      padding: 1rem;
-      font-weight: 600;
+      padding: 1.2rem 1rem;
+      font-weight: 700;
       user-select: none;
-      box-shadow: inset 0 1px 5px rgba(255,255,255,0.1);
+      box-shadow: inset 0 1px 6px rgba(255,255,255,0.15);
+      font-size: 1rem;
     }
 
     /* Responsive tweaks */
     @media (max-width: 600px) {
       header h1 {
-        font-size: 2rem;
+        font-size: 2.3rem;
       }
       header p {
         font-size: 1rem;
         padding: 0 1rem;
+      }
+      #repos {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .repo-card {
+        min-height: 70px;
       }
     }
   </style>
@@ -181,12 +206,12 @@
 
 <main>
   <section>
-    <h2>Skills</h2>
+    <h2>Filter Repositories By Skills</h2>
     <div id="skills"></div>
   </section>
 
   <section>
-    <h2>Repositories</h2>
+    <h2>Github Repositories</h2>
     <div id="repos"></div>
   </section>
 </main>
@@ -221,10 +246,25 @@
     'C': 'C',
   };
 
-  function createSkillBadge(skill) {
+  let allRepos = [];
+  let selectedSkills = new Set();
+
+  function createSkillBadge(skill, isFilter = true) {
     const span = document.createElement('span');
     span.className = 'skill-badge';
     span.textContent = skill;
+    if (isFilter) {
+      span.addEventListener('click', () => {
+        if (selectedSkills.has(skill)) {
+          selectedSkills.delete(skill);
+          span.classList.remove('selected');
+        } else {
+          selectedSkills.add(skill);
+          span.classList.add('selected');
+        }
+        renderRepos();
+      });
+    }
     return span;
   }
 
@@ -240,13 +280,33 @@
     link.textContent = repo.name;
     title.appendChild(link);
 
-    const desc = document.createElement('p');
-    desc.textContent = repo.description || 'No description';
-
     card.appendChild(title);
-    card.appendChild(desc);
+    // Description removed as requested
 
     return card;
+  }
+
+  function renderRepos() {
+    const reposContainer = document.getElementById('repos');
+    reposContainer.innerHTML = '';
+
+    let filtered = allRepos;
+    if (selectedSkills.size > 0) {
+      filtered = allRepos.filter(repo => {
+        if (!repo.language) return false;
+        const mappedLang = languageSkillMap[repo.language] || repo.language;
+        return [...selectedSkills].some(skill => skill === mappedLang);
+      });
+    }
+
+    if (filtered.length === 0) {
+      reposContainer.textContent = 'No repositories found for selected skill(s).';
+      return;
+    }
+
+    filtered.forEach(repo => {
+      reposContainer.appendChild(createRepoCard(repo));
+    });
   }
 
   async function fetchJson(url) {
@@ -275,13 +335,9 @@
   async function loadRepos() {
     try {
       const reposData = await fetchJson(reposApi);
+      allRepos = reposData;
+
       const skillsSet = new Set();
-
-      const skillsContainer = document.getElementById('skills');
-      const reposContainer = document.getElementById('repos');
-
-      skillsContainer.innerHTML = '';
-      reposContainer.innerHTML = '';
 
       reposData.forEach(repo => {
         if (repo.language) {
@@ -293,24 +349,19 @@
         }
       });
 
-      if (skillsSet.size === 0) {
-        skillsContainer.textContent = 'No detected skills from repositories.';
-      } else {
-        skillsSet.forEach(skill => {
-          skillsContainer.appendChild(createSkillBadge(skill));
-        });
-      }
+      const skillsContainer = document.getElementById('skills');
+      skillsContainer.innerHTML = '';
 
-      if (reposData.length === 0) {
-        reposContainer.textContent = 'No repositories found.';
-      } else {
-        reposData.forEach(repo => {
-          reposContainer.appendChild(createRepoCard(repo));
-        });
-      }
+      // Sort skills alphabetically
+      [...skillsSet].sort((a, b) => a.localeCompare(b)).forEach(skill => {
+        const badge = createSkillBadge(skill);
+        skillsContainer.appendChild(badge);
+      });
+
+      renderRepos();
+
     } catch (e) {
-      console.error('Error loading repos:', e);
-      document.getElementById('skills').textContent = 'Failed to load skills.';
+      console.error('Error loading repositories:', e);
       document.getElementById('repos').textContent = 'Failed to load repositories.';
     }
   }
