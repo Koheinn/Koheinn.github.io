@@ -4,13 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Heinn Htet Zan's Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
     }
     body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Fira Sans', sans-serif;
       background: linear-gradient(135deg, #fdf2ef, #ffe8e4);
       min-height: 100vh;
       display: flex;
@@ -65,8 +67,11 @@
     .contact-links a {
       color: white;
       font-weight: bold;
-      text-decoration: underline;
-      margin: 0 10px;
+      text-decoration: none;
+      margin: 0 12px;
+    }
+    .contact-links a i {
+      margin-right: 6px;
     }
 
     main {
@@ -91,78 +96,49 @@
       user-select: none;
     }
 
-    #skills {
+    .filter-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 14px;
       justify-content: center;
-      margin-bottom: 1rem;
+      gap: 12px;
     }
     .skill-badge {
-      background: #f69284;
-      color: white;
-      padding: 0.6rem 1.3rem;
-      border-radius: 25px;
-      font-weight: 700;
-      font-size: 1rem;
-      box-shadow: 0 4px 15px rgba(246, 146, 132, 0.5);
-      transition: background-color 0.3s ease, transform 0.2s ease;
+      background: #fff;
+      color: #f06d57;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      border: 2px solid #f06d57;
+      transition: all 0.3s ease;
       cursor: pointer;
-      user-select: none;
-      border: 2.5px solid transparent;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
     }
-    .skill-badge:hover {
-      background-color: #e86d5d;
-      transform: scale(1.1);
-    }
-    .skill-badge.selected {
-      background-color: #ff6f61;
-      border-color: #e65b4e;
-      box-shadow: 0 0 20px #ff6f61aa;
+    .skill-badge:hover, .skill-badge.selected {
+      background-color: #f06d57;
       color: white;
     }
 
     #repos {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 2.3rem;
+      gap: 2rem;
     }
     .repo-card {
       background: white;
       border-radius: 16px;
       box-shadow: 0 15px 30px rgba(246, 146, 132, 0.12);
-      display: flex;
-      flex-direction: column;
-      padding: 1.7rem 1.6rem;
-      transition: box-shadow 0.35s ease, transform 0.35s ease;
-      cursor: pointer;
-      user-select: none;
-      border: 2px solid transparent;
-      min-height: 90px;
-      justify-content: center;
+      padding: 1.6rem;
+      transition: transform 0.3s ease;
       text-align: center;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
+      cursor: pointer;
     }
     .repo-card:hover {
-      box-shadow: 0 25px 40px rgba(246, 146, 132, 0.3);
-      transform: translateY(-6px);
-      border-color: #f69284;
-    }
-    .repo-card h5 {
-      margin: 0;
-      font-size: 1.4rem;
-      color: #f69284;
-      font-weight: 800;
-      user-select: text;
-      transition: color 0.25s ease;
-      word-break: break-word;
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(246, 146, 132, 0.3);
     }
     .repo-card h5 a {
-      color: inherit;
+      color: #f06d57;
+      font-size: 1.3rem;
+      font-weight: 800;
       text-decoration: none;
     }
     .repo-card h5 a:hover {
@@ -174,11 +150,8 @@
       background: linear-gradient(135deg, #f69284, #f06d57);
       color: white;
       text-align: center;
-      padding: 1.2rem 1rem;
+      padding: 1.2rem;
       font-weight: 700;
-      user-select: none;
-      box-shadow: inset 0 1px 6px rgba(255,255,255,0.15);
-      font-size: 1rem;
     }
 
     @media (max-width: 600px) {
@@ -187,38 +160,33 @@
       }
       header p {
         font-size: 1rem;
-        padding: 0 1rem;
       }
-      #repos {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-      .repo-card {
-        min-height: 70px;
+      .filter-grid {
+        flex-direction: column;
+        align-items: center;
       }
     }
   </style>
 </head>
 <body>
-
 <header>
-  <img id="avatar" src="" alt="Profile Picture" />
+  <img id="avatar" src="" alt="Profile Picture">
   <h1 id="fullname">Loading...</h1>
-  <p id="bio" class="fst-italic"></p>
+  <p id="bio"></p>
   <div class="contact-links">
-    <a href="mailto:heinn2004@gmail.com">heinn2004@gmail.com</a> |
-    <a href="https://www.linkedin.com/in/heinn-htet-zan-040794291" target="_blank">LinkedIn</a>
+    <a href="mailto:heinn2004@gmail.com"><i class="fas fa-envelope"></i>heinn2004@gmail.com</a>
+    <a href="https://www.linkedin.com/in/heinn-htet-zan-040794291" target="_blank"><i class="fab fa-linkedin"></i>LinkedIn</a>
   </div>
 </header>
 
 <main>
   <section>
-    <h2>Filter Repositories By Skills</h2>
-    <div id="skills"></div>
+    <h2><i class="fas fa-filter"></i> Filter Repositories Based On My Programming Skills</h2>
+    <div id="skills" class="filter-grid"></div>
   </section>
 
   <section>
-    <h2>Github Repositories</h2>
+    <h2><i class="fab fa-github"></i> My Github Repositories</h2>
     <div id="repos"></div>
   </section>
 </main>
@@ -233,52 +201,35 @@
   const reposApi = `https://api.github.com/users/${username}/repos?per_page=100`;
 
   const languageSkillMap = {
-    'PHP': 'PHP',
-    'JavaScript': 'JavaScript',
-    'Java': 'Java',
-    'Kotlin': 'Kotlin',
-    'HTML': 'HTML',
-    'CSS': 'CSS',
-    'TypeScript': 'TypeScript',
-    'Python': 'Python',
-    'C++': 'C++',
-    'C#': 'C#',
-    'Go': 'Go',
-    'Ruby': 'Ruby',
-    'Swift': 'Swift',
-    'Objective-C': 'Objective-C',
-    'Shell': 'Shell Scripting',
-    'Dockerfile': 'Docker',
-    'Makefile': 'Make',
-    'C': 'C',
+    'PHP': 'PHP', 'JavaScript': 'JavaScript', 'Java': 'Java', 'Kotlin': 'Kotlin',
+    'HTML': 'HTML', 'CSS': 'CSS', 'TypeScript': 'TypeScript', 'Python': 'Python',
+    'C++': 'C++', 'C#': 'C#', 'Go': 'Go', 'Ruby': 'Ruby', 'Swift': 'Swift',
+    'Objective-C': 'Objective-C', 'Shell': 'Shell Scripting', 'Dockerfile': 'Docker',
+    'Makefile': 'Make', 'C': 'C'
   };
 
   let allRepos = [];
   let selectedSkills = new Set();
 
-  function createSkillBadge(skill, isFilter = true) {
+  function createSkillBadge(skill) {
     const span = document.createElement('span');
     span.className = 'skill-badge';
     span.textContent = skill;
-    if (isFilter) {
-      span.addEventListener('click', () => {
-        if (selectedSkills.has(skill)) {
-          selectedSkills.delete(skill);
-          span.classList.remove('selected');
-        } else {
-          selectedSkills.add(skill);
-          span.classList.add('selected');
-        }
-        renderRepos();
-      });
-    }
+    span.addEventListener('click', () => {
+      span.classList.toggle('selected');
+      if (selectedSkills.has(skill)) {
+        selectedSkills.delete(skill);
+      } else {
+        selectedSkills.add(skill);
+      }
+      renderRepos();
+    });
     return span;
   }
 
   function createRepoCard(repo) {
     const card = document.createElement('div');
     card.className = 'repo-card';
-
     const title = document.createElement('h5');
     const link = document.createElement('a');
     link.href = repo.html_url;
@@ -286,7 +237,6 @@
     link.rel = 'noopener noreferrer';
     link.textContent = repo.name;
     title.appendChild(link);
-
     card.appendChild(title);
     return card;
   }
@@ -294,24 +244,19 @@
   function renderRepos() {
     const reposContainer = document.getElementById('repos');
     reposContainer.innerHTML = '';
-
     let filtered = allRepos;
     if (selectedSkills.size > 0) {
       filtered = allRepos.filter(repo => {
         if (!repo.language) return false;
-        const mappedLang = languageSkillMap[repo.language] || repo.language;
-        return [...selectedSkills].some(skill => skill === mappedLang);
+        const lang = languageSkillMap[repo.language] || repo.language;
+        return selectedSkills.has(lang);
       });
     }
-
     if (filtered.length === 0) {
       reposContainer.textContent = 'No repositories found for selected skill(s).';
       return;
     }
-
-    filtered.forEach(repo => {
-      reposContainer.appendChild(createRepoCard(repo));
-    });
+    filtered.forEach(repo => reposContainer.appendChild(createRepoCard(repo)));
   }
 
   async function fetchJson(url) {
@@ -327,44 +272,30 @@
 
   async function loadProfile() {
     try {
-      const userData = await fetchJson(userApi);
-      document.getElementById('avatar').src = userData.avatar_url;
-      document.getElementById('fullname').textContent = userData.name || userData.login;
-      document.getElementById('bio').textContent = userData.bio || '';
+      const user = await fetchJson(userApi);
+      document.getElementById('avatar').src = user.avatar_url;
+      document.getElementById('fullname').textContent = user.name || user.login;
+      document.getElementById('bio').textContent = user.bio || '';
     } catch (e) {
-      console.error('Error loading user profile:', e);
+      console.error('Profile load failed:', e);
       document.getElementById('fullname').textContent = 'Failed to load profile';
     }
   }
 
   async function loadRepos() {
     try {
-      const reposData = await fetchJson(reposApi);
-      allRepos = reposData;
-
-      const skillsSet = new Set();
-      reposData.forEach(repo => {
-        if (repo.language) {
-          if (languageSkillMap[repo.language]) {
-            skillsSet.add(languageSkillMap[repo.language]);
-          } else {
-            skillsSet.add(repo.language);
-          }
-        }
+      const repos = await fetchJson(reposApi);
+      allRepos = repos;
+      const skills = new Set();
+      repos.forEach(r => {
+        if (r.language) skills.add(languageSkillMap[r.language] || r.language);
       });
-
-      const skillsContainer = document.getElementById('skills');
-      skillsContainer.innerHTML = '';
-
-      [...skillsSet].sort((a, b) => a.localeCompare(b)).forEach(skill => {
-        const badge = createSkillBadge(skill);
-        skillsContainer.appendChild(badge);
-      });
-
+      const container = document.getElementById('skills');
+      container.innerHTML = '';
+      [...skills].sort().forEach(skill => container.appendChild(createSkillBadge(skill)));
       renderRepos();
-
     } catch (e) {
-      console.error('Error loading repositories:', e);
+      console.error('Repos load failed:', e);
       document.getElementById('repos').textContent = 'Failed to load repositories.';
     }
   }
@@ -373,6 +304,5 @@
   loadProfile();
   loadRepos();
 </script>
-
 </body>
 </html>
