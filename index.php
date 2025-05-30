@@ -7,16 +7,41 @@ function fetchFromGitHub($url) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    // Set User-Agent to avoid 403 Forbidden
-    curl_setopt($ch, CURLOPT_USERAGENT, 'PHP');
+
+    // GitHub API requires a User-Agent header
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'User-Agent: Koheinn-Portfolio-App',
+        'Accept: application/vnd.github.v3+json'
+    ]);
+
     $response = curl_exec($ch);
+
+    if ($response === false) {
+        echo "cURL Error: " . curl_error($ch);
+        curl_close($ch);
+        return null;
+    }
+
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
+
+    if ($httpCode !== 200) {
+        echo "GitHub API returned HTTP status $httpCode";
+        return null;
+    }
+
     return json_decode($response, true);
 }
 
 $userData = fetchFromGitHub($userApiUrl);
+if (!is_array($userData)) {
+    die('Failed to fetch user data from GitHub API.');
+}
 
 $reposData = fetchFromGitHub($reposApiUrl);
+if (!is_array($reposData)) {
+    die('Failed to fetch repository data from GitHub API.');
+}
 
 $skills = [];
 
@@ -75,7 +100,6 @@ $languageSkillMap = [
     'Smalltalk' => 'Smalltalk',
     'VBScript' => 'VBScript',
     'ActionScript' => 'ActionScript',
-    'Assembly' => 'Assembly',
     'CoffeeScript' => 'CoffeeScript',
     'Common Lisp' => 'Common Lisp',
     'D' => 'D',
@@ -88,7 +112,6 @@ $languageSkillMap = [
     'Logo' => 'Logo',
     'ML' => 'ML',
     'Modula-2' => 'Modula-2',
-    'OCaml' => 'OCaml',
     'OpenCL' => 'OpenCL',
     'OpenEdge ABL' => 'OpenEdge ABL',
     'Racket' => 'Racket',
@@ -118,21 +141,24 @@ $skillsList = array_keys($skills);
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Koheinn's Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><?php echo htmlspecialchars($username); ?>'s Portfolio</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       background: #f4f4f4;
       color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
     header {
       background: #0066cc;
       color: #fff;
       padding: 40px 20px;
       text-align: center;
+      flex-shrink: 0;
     }
     header img {
       border-radius: 50%;
@@ -140,6 +166,8 @@ $skillsList = array_keys($skills);
       height: 150px;
       border: 5px solid #fff;
       margin-bottom: 20px;
+      object-fit: cover;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
     }
     header h1 {
       margin: 10px 0 5px;
@@ -148,11 +176,17 @@ $skillsList = array_keys($skills);
     header p {
       margin: 0;
       font-size: 1.2em;
+      font-style: italic;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
-    section {
+    main {
       padding: 40px 20px;
       max-width: 1000px;
       margin: auto;
+      flex-grow: 1;
+      width: 100%;
     }
     h2 {
       border-bottom: 2px solid #0066cc;
@@ -163,12 +197,19 @@ $skillsList = array_keys($skills);
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+      margin-bottom: 40px;
     }
     .skill {
       background: #e0e0e0;
       padding: 10px 15px;
       border-radius: 20px;
       font-size: 1em;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: background 0.3s ease;
+      cursor: default;
+    }
+    .skill:hover {
+      background: #c0d4fc;
     }
     .repos {
       display: grid;
@@ -180,27 +221,35 @@ $skillsList = array_keys($skills);
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      transition: transform 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     .repo:hover {
       transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
     .repo a {
       text-decoration: none;
       color: #0066cc;
       font-weight: bold;
       font-size: 1.1em;
+      margin-bottom: 10px;
+      word-break: break-word;
     }
     .repo p {
-      margin: 10px 0 0;
+      margin: 0;
       font-size: 0.95em;
       color: #555;
+      flex-grow: 1;
     }
     footer {
       background: #0066cc;
       color: #fff;
       text-align: center;
       padding: 20px;
+      flex-shrink: 0;
       margin-top: 40px;
     }
     @media (max-width: 600px) {
@@ -210,47 +259,61 @@ $skillsList = array_keys($skills);
       header p {
         font-size: 1em;
       }
+      .skill {
+        font-size: 0.9em;
+        padding: 8px 12px;
+      }
+      .repo {
+        padding: 15px;
+      }
     }
   </style>
 </head>
 <body>
   <header>
-    <?php if (isset($userData['avatar_url'])): ?>
+    <?php if (!empty($userData['avatar_url'])): ?>
       <img src="<?php echo htmlspecialchars($userData['avatar_url']); ?>" alt="Profile Photo" />
     <?php endif; ?>
-    <h1><?php echo isset($userData['name']) ? htmlspecialchars($userData['name']) : $username; ?></h1>
-    <?php if (isset($userData['bio'])): ?>
+    <h1><?php echo htmlspecialchars($userData['name'] ?? $username); ?></h1>
+    <?php if (!empty($userData['bio'])): ?>
       <p><?php echo htmlspecialchars($userData['bio']); ?></p>
     <?php endif; ?>
   </header>
-  <section>
-    <h2>Skills</h2>
-    <div class="skills">
-      <?php foreach ($skillsList as $skill): ?>
-        <div class="skill"><?php echo htmlspecialchars($skill); ?></div>
-      <?php endforeach; ?>
-    </div>
-  </section>
-  <section>
-    <h2>Repositories</h2>
-    <div class="repos">
-      <?php foreach ($reposData as $repo): ?>
-        <div class="repo">
-          <a href="<?php echo htmlspecialchars($repo['html_url']); ?>" target="_blank"><?php echo htmlspecialchars($repo['name']); ?></a>
-          <?php if (isset($repo['description']) && $repo['description']): ?>
-            <p><?php echo htmlspecialchars($repo['description']); ?></p>
-          <?php endif; ?>
-        </div>
-      <?php endforeach; ?>
-    </div>
-  </section>
+  <main>
+    <section>
+      <h2>Skills</h2>
+      <div class="skills">
+        <?php if (count($skillsList) === 0): ?>
+          <p>No detected skills from repositories.</p>
+        <?php else: ?>
+          <?php foreach ($skillsList as $skill): ?>
+            <div class="skill"><?php echo htmlspecialchars($skill); ?></div>
+          <?php endforeach; ?>
+        <?php endif; ?>
+      </div>
+    </section>
+    <section>
+      <h2>Repositories</h2>
+      <div class="repos">
+        <?php if (count($reposData) === 0): ?>
+          <p>No repositories found.</p>
+        <?php else: ?>
+          <?php foreach ($reposData as $repo): ?>
+            <div class="repo">
+              <a href="<?php echo htmlspecialchars($repo['html_url']); ?>" target="_blank" rel="noopener noreferrer">
+                <?php echo htmlspecialchars($repo['name']); ?>
+              </a>
+              <?php if (!empty($repo['description'])): ?>
+                <p><?php echo htmlspecialchars($repo['description']); ?></p>
+              <?php endif; ?>
+            </div>
+          <?php endforeach; ?>
+        <?php endif; ?>
+      </div>
+    </section>
+  </main>
   <footer>
-    &copy; <?php echo date('Y'); ?> <?php echo isset($userData['name']) ? htmlspecialchars($userData['name']) : $username; ?>. All rights reserved.
+    &copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars($userData['name'] ?? $username); ?>. All rights reserved.
   </footer>
-</body>
-</html>
-
-    fetchRepos();
-  </script>
 </body>
 </html>
