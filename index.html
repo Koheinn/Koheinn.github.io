@@ -4,44 +4,170 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Koheinn's Portfolio</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
+    /* Reset and base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
     body {
-      background-color: #f8f9fa;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e0eafc, #cfdef3);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      color: #333;
+      line-height: 1.6;
     }
+
     header {
-      background-color: #007bff;
+      background-color: #2a52be;
       color: white;
-      padding: 3rem 1rem;
       text-align: center;
+      padding: 3rem 1rem 4rem;
+      position: relative;
+      clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
+      box-shadow: 0 8px 20px rgba(42, 82, 190, 0.3);
     }
     header img {
-      width: 150px;
-      height: 150px;
+      width: 160px;
+      height: 160px;
       border-radius: 50%;
       border: 5px solid white;
       object-fit: cover;
+      box-shadow: 0 0 15px rgba(0,0,0,0.25);
       margin-bottom: 1rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease;
+    }
+    header img:hover {
+      transform: scale(1.05) rotate(3deg);
+    }
+    header h1 {
+      font-size: 2.8rem;
+      margin: 0.25rem 0 0.5rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+    }
+    header p {
+      font-style: italic;
+      font-size: 1.15rem;
+      max-width: 600px;
+      margin: 0 auto;
+      color: #dce6f1;
+      text-shadow: 0 0 3px rgba(0,0,0,0.1);
+    }
+
+    main {
+      flex-grow: 1;
+      max-width: 1000px;
+      width: 90%;
+      margin: 3rem auto 4rem;
+    }
+
+    section {
+      margin-bottom: 4rem;
+    }
+    section h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      border-left: 6px solid #2a52be;
+      padding-left: 0.5rem;
+      color: #1b327a;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-weight: 700;
+      user-select: none;
+    }
+
+    /* Skills container */
+    #skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
     }
     .skill-badge {
-      margin: 0.25rem;
+      background: #2a52be;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      box-shadow: 0 3px 10px rgba(42,82,190,0.4);
+      transition: background-color 0.3s ease;
+      cursor: default;
+      user-select: none;
+    }
+    .skill-badge:hover {
+      background-color: #1b327a;
+    }
+
+    /* Repositories grid */
+    #repos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
     }
     .repo-card {
-      transition: box-shadow 0.2s ease;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(42,82,190,0.12);
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
+      user-select: none;
     }
     .repo-card:hover {
-      box-shadow: 0 0 15px rgba(0,123,255,0.5);
+      box-shadow: 0 20px 30px rgba(42,82,190,0.25);
+      transform: translateY(-5px);
     }
+    .repo-card h5 {
+      margin: 0 0 0.75rem;
+      font-size: 1.3rem;
+      color: #2a52be;
+      font-weight: 700;
+      user-select: text;
+    }
+    .repo-card h5 a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .repo-card h5 a:hover {
+      color: #1b327a;
+      text-decoration: underline;
+    }
+    .repo-card p {
+      margin: 0;
+      color: #555;
+      font-size: 1rem;
+      flex-grow: 1;
+      user-select: text;
+    }
+
+    /* Footer */
     footer {
-      background-color: #007bff;
+      background-color: #2a52be;
       color: white;
       text-align: center;
       padding: 1rem;
-      margin-top: auto;
+      font-weight: 600;
+      user-select: none;
+      box-shadow: inset 0 1px 5px rgba(255,255,255,0.1);
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 2rem;
+      }
+      header p {
+        font-size: 1rem;
+        padding: 0 1rem;
+      }
     }
   </style>
 </head>
@@ -53,15 +179,15 @@
   <p id="bio" class="fst-italic"></p>
 </header>
 
-<main class="container my-5">
+<main>
   <section>
     <h2>Skills</h2>
-    <div id="skills" class="d-flex flex-wrap"></div>
+    <div id="skills"></div>
   </section>
 
-  <section class="mt-5">
+  <section>
     <h2>Repositories</h2>
-    <div id="repos" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"></div>
+    <div id="repos"></div>
   </section>
 </main>
 
@@ -74,7 +200,6 @@
   const userApi = `https://api.github.com/users/${username}`;
   const reposApi = `https://api.github.com/users/${username}/repos?per_page=100`;
 
-  // Map GitHub languages to nice skill names if needed
   const languageSkillMap = {
     'PHP': 'PHP',
     'JavaScript': 'JavaScript',
@@ -94,60 +219,44 @@
     'Dockerfile': 'Docker',
     'Makefile': 'Make',
     'C': 'C',
-    // Add more mappings if needed
   };
 
   function createSkillBadge(skill) {
     const span = document.createElement('span');
-    span.className = 'badge bg-primary skill-badge';
+    span.className = 'skill-badge';
     span.textContent = skill;
     return span;
   }
 
   function createRepoCard(repo) {
-    const col = document.createElement('div');
-    col.className = 'col';
-
     const card = document.createElement('div');
-    card.className = 'card h-100 repo-card shadow-sm';
-
-    const cardBody = document.createElement('div');
-    cardBody.className = 'card-body d-flex flex-column';
+    card.className = 'repo-card';
 
     const title = document.createElement('h5');
-    title.className = 'card-title';
     const link = document.createElement('a');
     link.href = repo.html_url;
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     link.textContent = repo.name;
-    link.className = 'text-decoration-none';
-
     title.appendChild(link);
 
     const desc = document.createElement('p');
-    desc.className = 'card-text text-muted flex-grow-1';
     desc.textContent = repo.description || 'No description';
 
-    cardBody.appendChild(title);
-    cardBody.appendChild(desc);
+    card.appendChild(title);
+    card.appendChild(desc);
 
-    card.appendChild(cardBody);
-    col.appendChild(card);
-
-    return col;
+    return card;
   }
 
   async function fetchJson(url) {
     const res = await fetch(url, {
       headers: {
         'Accept': 'application/vnd.github.v3+json',
-        'User-Agent': 'Koheinn-Portfolio-App' // Note: This header is ignored in browsers but kept for clarity
+        'User-Agent': 'Koheinn-Portfolio-App' // Browser ignores but kept for clarity
       }
     });
-    if (!res.ok) {
-      throw new Error(`GitHub API error: ${res.status}`);
-    }
+    if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
     return res.json();
   }
 
@@ -157,8 +266,8 @@
       document.getElementById('avatar').src = userData.avatar_url;
       document.getElementById('fullname').textContent = userData.name || userData.login;
       document.getElementById('bio').textContent = userData.bio || '';
-    } catch (error) {
-      console.error('Error loading user profile:', error);
+    } catch (e) {
+      console.error('Error loading user profile:', e);
       document.getElementById('fullname').textContent = 'Failed to load profile';
     }
   }
@@ -171,11 +280,9 @@
       const skillsContainer = document.getElementById('skills');
       const reposContainer = document.getElementById('repos');
 
-      // Clear containers
       skillsContainer.innerHTML = '';
       reposContainer.innerHTML = '';
 
-      // Collect skills from languages
       reposData.forEach(repo => {
         if (repo.language) {
           if (languageSkillMap[repo.language]) {
@@ -186,7 +293,6 @@
         }
       });
 
-      // Show skills badges
       if (skillsSet.size === 0) {
         skillsContainer.textContent = 'No detected skills from repositories.';
       } else {
@@ -195,7 +301,6 @@
         });
       }
 
-      // Show repos cards
       if (reposData.length === 0) {
         reposContainer.textContent = 'No repositories found.';
       } else {
@@ -203,8 +308,8 @@
           reposContainer.appendChild(createRepoCard(repo));
         });
       }
-    } catch (error) {
-      console.error('Error loading repos:', error);
+    } catch (e) {
+      console.error('Error loading repos:', e);
       document.getElementById('skills').textContent = 'Failed to load skills.';
       document.getElementById('repos').textContent = 'Failed to load repositories.';
     }
