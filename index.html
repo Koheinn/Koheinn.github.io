@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Koheinn's Portfolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #f8f9fa;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background-color: #007bff;
+      color: white;
+      padding: 3rem 1rem;
+      text-align: center;
+    }
+    header img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 5px solid white;
+      object-fit: cover;
+      margin-bottom: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+    .skill-badge {
+      margin: 0.25rem;
+    }
+    .repo-card {
+      transition: box-shadow 0.2s ease;
+    }
+    .repo-card:hover {
+      box-shadow: 0 0 15px rgba(0,123,255,0.5);
+    }
+    footer {
+      background-color: #007bff;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: auto;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img id="avatar" src="" alt="Profile Picture" />
+  <h1 id="fullname">Loading...</h1>
+  <p id="bio" class="fst-italic"></p>
+</header>
+
+<main class="container my-5">
+  <section>
+    <h2>Skills</h2>
+    <div id="skills" class="d-flex flex-wrap"></div>
+  </section>
+
+  <section class="mt-5">
+    <h2>Repositories</h2>
+    <div id="repos" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4"></div>
+  </section>
+</main>
+
+<footer>
+  &copy; <span id="year"></span> Koheinn. All rights reserved.
+</footer>
+
+<script>
+  const username = 'Koheinn';
+  const userApi = `https://api.github.com/users/${username}`;
+  const reposApi = `https://api.github.com/users/${username}/repos?per_page=100`;
+
+  // Map GitHub languages to nice skill names if needed
+  const languageSkillMap = {
+    'PHP': 'PHP',
+    'JavaScript': 'JavaScript',
+    'Java': 'Java',
+    'Kotlin': 'Kotlin',
+    'HTML': 'HTML',
+    'CSS': 'CSS',
+    'TypeScript': 'TypeScript',
+    'Python': 'Python',
+    'C++': 'C++',
+    'C#': 'C#',
+    'Go': 'Go',
+    'Ruby': 'Ruby',
+    'Swift': 'Swift',
+    'Objective-C': 'Objective-C',
+    'Shell': 'Shell Scripting',
+    'Dockerfile': 'Docker',
+    'Makefile': 'Make',
+    'C': 'C',
+    // Add more mappings if needed
+  };
+
+  function createSkillBadge(skill) {
+    const span = document.createElement('span');
+    span.className = 'badge bg-primary skill-badge';
+    span.textContent = skill;
+    return span;
+  }
+
+  function createRepoCard(repo) {
+    const col = document.createElement('div');
+    col.className = 'col';
+
+    const card = document.createElement('div');
+    card.className = 'card h-100 repo-card shadow-sm';
+
+    const cardBody = document.createElement('div');
+    cardBody.className = 'card-body d-flex flex-column';
+
+    const title = document.createElement('h5');
+    title.className = 'card-title';
+    const link = document.createElement('a');
+    link.href = repo.html_url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.textContent = repo.name;
+    link.className = 'text-decoration-none';
+
+    title.appendChild(link);
+
+    const desc = document.createElement('p');
+    desc.className = 'card-text text-muted flex-grow-1';
+    desc.textContent = repo.description || 'No description';
+
+    cardBody.appendChild(title);
+    cardBody.appendChild(desc);
+
+    card.appendChild(cardBody);
+    col.appendChild(card);
+
+    return col;
+  }
+
+  async function fetchJson(url) {
+    const res = await fetch(url, {
+      headers: {
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'Koheinn-Portfolio-App' // Note: This header is ignored in browsers but kept for clarity
+      }
+    });
+    if (!res.ok) {
+      throw new Error(`GitHub API error: ${res.status}`);
+    }
+    return res.json();
+  }
+
+  async function loadProfile() {
+    try {
+      const userData = await fetchJson(userApi);
+      document.getElementById('avatar').src = userData.avatar_url;
+      document.getElementById('fullname').textContent = userData.name || userData.login;
+      document.getElementById('bio').textContent = userData.bio || '';
+    } catch (error) {
+      console.error('Error loading user profile:', error);
+      document.getElementById('fullname').textContent = 'Failed to load profile';
+    }
+  }
+
+  async function loadRepos() {
+    try {
+      const reposData = await fetchJson(reposApi);
+      const skillsSet = new Set();
+
+      const skillsContainer = document.getElementById('skills');
+      const reposContainer = document.getElementById('repos');
+
+      // Clear containers
+      skillsContainer.innerHTML = '';
+      reposContainer.innerHTML = '';
+
+      // Collect skills from languages
+      reposData.forEach(repo => {
+        if (repo.language) {
+          if (languageSkillMap[repo.language]) {
+            skillsSet.add(languageSkillMap[repo.language]);
+          } else {
+            skillsSet.add(repo.language);
+          }
+        }
+      });
+
+      // Show skills badges
+      if (skillsSet.size === 0) {
+        skillsContainer.textContent = 'No detected skills from repositories.';
+      } else {
+        skillsSet.forEach(skill => {
+          skillsContainer.appendChild(createSkillBadge(skill));
+        });
+      }
+
+      // Show repos cards
+      if (reposData.length === 0) {
+        reposContainer.textContent = 'No repositories found.';
+      } else {
+        reposData.forEach(repo => {
+          reposContainer.appendChild(createRepoCard(repo));
+        });
+      }
+    } catch (error) {
+      console.error('Error loading repos:', error);
+      document.getElementById('skills').textContent = 'Failed to load skills.';
+      document.getElementById('repos').textContent = 'Failed to load repositories.';
+    }
+  }
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  loadProfile();
+  loadRepos();
+</script>
+
+</body>
+</html>
