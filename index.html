@@ -146,10 +146,18 @@
       align-items: center;
       gap: 0.5rem;
       cursor: pointer;
+      outline: none;
     }
     [data-theme="dark"] .contact-links a,
     [data-theme="dark"] .contact-links button {
       color: var(--text-light); /* Keep bright in dark mode */
+      background: var(--glass-dark);
+    }
+    .contact-links a:active, .contact-links button:active {
+      filter: brightness(0.95);
+      /* Prevent color from becoming dull in dark mode */
+      color: inherit !important;
+      background: inherit !important;
     }
     .contact-links a i, .contact-links button i { margin-right: 6px; }
     .contact-links button:hover, .contact-links a:hover {
