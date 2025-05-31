@@ -408,6 +408,16 @@
 
   <section>
     <h2><span class="emoji">📦</span><i class="fab fa-github"></i> My Github Repositories</h2>
+    <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 1rem;">
+      <input
+        id="repoSearch"
+        type="text"
+        class="form-control"
+        placeholder="🔍 Search repositories..."
+        style="max-width: 320px; border-radius: 2rem; border: 1.5px solid var(--primary); box-shadow: 0 2px 8px rgba(127,90,240,0.08);"
+        aria-label="Search repositories"
+      />
+    </div>
     <div id="repos" aria-live="polite" aria-label="GitHub repositories">Loading repositories...</div>
   </section>
 </main>
@@ -514,6 +524,7 @@
 
   let allRepos = [];
   let selectedSkills = new Set();
+  let repoSearchQuery = ""; // <-- Add this line
 
   function createSkillBadge(skill) {
     const span = document.createElement('span');
@@ -573,15 +584,27 @@
     const reposContainer = document.getElementById('repos');
     reposContainer.innerHTML = '';
     let filtered = allRepos;
+
+    // Filter by selected skills
     if (selectedSkills.size > 0) {
-      filtered = allRepos.filter(repo => {
+      filtered = filtered.filter(repo => {
         if (!repo.language) return false;
         const lang = languageSkillMap[repo.language] || repo.language;
         return selectedSkills.has(lang);
       });
     }
+
+    // Filter by search query
+    if (repoSearchQuery.trim() !== "") {
+      const q = repoSearchQuery.trim().toLowerCase();
+      filtered = filtered.filter(repo =>
+        repo.name.toLowerCase().includes(q) ||
+        (repo.description && repo.description.toLowerCase().includes(q))
+      );
+    }
+
     if (filtered.length === 0) {
-      reposContainer.textContent = '😕 No repositories found for selected skill(s).';
+      reposContainer.textContent = '😕 No repositories found for selected skill(s) or search.';
       return;
     }
     filtered.forEach(repo => reposContainer.appendChild(createRepoCard(repo)));
@@ -662,6 +685,17 @@
   $('#contactModal').on('show.bs.modal', function () {
     document.getElementById('contactAlert').style.display = 'none';
     document.getElementById('contactForm').reset();
+  });
+
+  // Add search event listener after DOM is loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('repoSearch');
+    if (searchInput) {
+      searchInput.addEventListener('input', function(e) {
+        repoSearchQuery = e.target.value;
+        renderRepos();
+      });
+    }
   });
 </script>
 </body>
