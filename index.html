@@ -6,196 +6,492 @@
   <title>Heinn Htet Zan's Portfolio</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
+    :root {
+      --primary: #7f5af0;
+      --secondary: #2cb67d;
+      --accent: #fbbf24;
+      --bg-light: #f8fafc;
+      --bg-dark: #16161a;
+      --text-light: #f8fafc;
+      --text-dark: #16161a;
+      --glass: rgba(255,255,255,0.7);
+      --glass-dark: rgba(22,22,26,0.7);
+      --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+      --transition: 0.35s cubic-bezier(.4,2,.6,1);
     }
-    body {
-      margin: 0;
-      font-family: 'Fira Sans', sans-serif;
-      background: linear-gradient(135deg, #fdf2ef, #ffe8e4);
+    [data-theme="dark"] {
+      --bg-light: #16161a;
+      --bg-dark: #242629;
+      --text-light: #f8fafc;
+      --text-dark: #f8fafc;
+      --glass: rgba(36,38,41,0.7);
+      --glass-dark: rgba(22,22,26,0.9);
+      --shadow: 0 8px 32px 0 rgba(127, 90, 240, 0.18);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      color: #222;
-      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      font-family: 'Fira Sans', sans-serif;
+      background: linear-gradient(135deg, var(--bg-light) 0%, #e0e7ff 100%);
+      color: var(--text-dark);
+      transition: background var(--transition), color var(--transition);
     }
-
+    [data-theme="dark"] body {
+      background: linear-gradient(135deg, var(--bg-dark) 0%, #232946 100%);
+      color: var(--text-light);
+    }
     header {
-      background: linear-gradient(135deg, #f69284, #f06d57);
-      color: white;
+      background: linear-gradient(120deg, var(--primary) 60%, var(--secondary) 100%);
+      color: var(--text-light);
       text-align: center;
       padding: 3rem 1rem 5rem;
       position: relative;
-      clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
-      box-shadow: 0 8px 30px rgba(246, 146, 132, 0.4);
-      user-select: none;
+      border-radius: 0 0 2.5rem 2.5rem;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: background var(--transition), color var(--transition);
+      z-index: 1;
     }
+    .theme-toggle {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      background: var(--glass);
+      border: none;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7rem;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(127,90,240,0.12);
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition), transform 0.2s;
+      z-index: 2;
+    }
+    .theme-toggle:hover { transform: scale(1.12) rotate(-8deg); }
     header img {
       width: 160px;
       height: 160px;
       border-radius: 50%;
-      border: 5px solid white;
+      border: 6px solid var(--accent);
       object-fit: cover;
-      box-shadow: 0 0 20px rgba(0,0,0,0.35);
+      box-shadow: 0 0 32px 0 rgba(127,90,240,0.18);
       margin-bottom: 1rem;
-      transition: transform 0.35s ease;
-      cursor: default;
+      transition: transform 0.5s cubic-bezier(.4,2,.6,1), box-shadow 0.3s;
+      cursor: pointer;
+      background: var(--glass);
+      backdrop-filter: blur(4px);
+      animation: fadeInScale 1.2s cubic-bezier(.4,2,.6,1);
     }
-    header img:hover {
-      transform: scale(1.1) rotate(3deg);
+    header img:hover { transform: scale(1.08) rotate(2deg); box-shadow: 0 0 48px 0 var(--primary); }
+    @keyframes fadeInScale {
+      0% { opacity: 0; transform: scale(0.7);}
+      100% { opacity: 1; transform: scale(1);}
     }
     header h1 {
       font-size: 3rem;
       margin: 0.25rem 0 0.3rem;
       font-weight: 800;
       letter-spacing: 1.5px;
-      text-shadow: 2px 2px 8px rgba(0,0,0,0.25);
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.13);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      animation: fadeInUp 1.2s 0.2s both;
+    }
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(30px);}
+      100% { opacity: 1; transform: translateY(0);}
     }
     header p {
       font-style: italic;
       font-size: 1.2rem;
       max-width: 600px;
       margin: 0 auto 0.8rem;
-      color: #fddfda;
-      text-shadow: 0 0 6px rgba(0,0,0,0.1);
+      color: #ffe7c7;
+      text-shadow: 0 0 6px rgba(0,0,0,0.08);
+      animation: fadeInUp 1.2s 0.4s both;
     }
     .contact-links {
-      font-size: 1rem;
-      margin-top: 0.5rem;
+      font-size: 1.1rem;
+      margin-top: 0.7rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      animation: fadeInUp 1.2s 0.6s both;
     }
-    .contact-links a {
-      color: white;
+    .contact-links a, .contact-links button {
+      color: var(--primary); /* Changed from var(--text-light) for better contrast in light mode */
       font-weight: bold;
       text-decoration: none;
-      margin: 0 12px;
+      background: var(--glass);
+      border: none;
+      border-radius: 2rem;
+      padding: 0.5rem 1.2rem;
+      margin: 0 4px;
+      font-family: 'Fira Sans', sans-serif;
+      font-size: 1.05rem;
+      box-shadow: 0 2px 8px rgba(127,90,240,0.08);
+      transition: background var(--transition), color var(--transition), box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
     }
-    .contact-links a i {
-      margin-right: 6px;
+    [data-theme="dark"] .contact-links a,
+    [data-theme="dark"] .contact-links button {
+      color: var(--text-light); /* Keep bright in dark mode */
     }
-
+    .contact-links a i, .contact-links button i { margin-right: 6px; }
+    .contact-links button:hover, .contact-links a:hover {
+      background: var(--secondary);
+      color: var(--bg-dark);
+      box-shadow: 0 4px 16px rgba(44,182,125,0.18);
+      text-decoration: none;
+      transform: translateY(-2px) scale(1.04);
+    }
     main {
       flex-grow: 1;
       max-width: 1000px;
-      width: 90%;
+      width: 92%;
       margin: 3rem auto 4rem;
+      background: var(--glass);
+      border-radius: 2rem;
+      box-shadow: var(--shadow);
+      padding: 2.5rem 2rem;
+      transition: background var(--transition), color var(--transition);
+      backdrop-filter: blur(8px);
+      animation: fadeInScale 1.2s 0.2s both;
     }
-
     section {
-      margin-bottom: 4rem;
+      margin-bottom: 3.5rem;
+      animation: fadeInUp 1.2s 0.3s both;
     }
     section h2 {
       font-size: 2.1rem;
       margin-bottom: 1.2rem;
-      border-left: 8px solid #f69284;
+      border-left: 8px solid var(--primary);
       padding-left: 0.7rem;
-      color: #a94442;
+      color: var(--primary);
       text-transform: uppercase;
       letter-spacing: 1.3px;
       font-weight: 800;
       user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      background: linear-gradient(90deg, var(--primary) 10%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-
     .filter-grid {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 12px;
+      gap: 14px;
+      margin-bottom: 0.5rem;
     }
     .skill-badge {
-      background: #fff;
-      color: #f06d57;
-      padding: 0.5rem 1rem;
+      background: var(--glass);
+      color: var(--primary);
+      padding: 0.5rem 1.1rem;
       border-radius: 20px;
       font-weight: 600;
-      border: 2px solid #f06d57;
-      transition: all 0.3s ease;
+      border: 2px solid var(--primary);
+      transition: all var(--transition);
       cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(127,90,240,0.08);
+      font-size: 1.05rem;
+      outline: none;
+      position: relative;
     }
-    .skill-badge:hover, .skill-badge.selected {
-      background-color: #f06d57;
-      color: white;
+    .skill-badge.selected, .skill-badge:hover {
+      background: linear-gradient(90deg, var(--primary) 60%, var(--secondary) 100%);
+      color: var(--text-light);
+      border-color: var(--secondary);
+      transform: scale(1.08) translateY(-2px);
+      box-shadow: 0 4px 16px rgba(44,182,125,0.18);
     }
-
     #repos {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 2rem;
+      margin-top: 1rem;
     }
     .repo-card {
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 15px 30px rgba(246, 146, 132, 0.12);
-      padding: 1.6rem;
-      transition: transform 0.3s ease;
+      background: var(--glass);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 1.6rem 1.2rem;
+      transition: transform 0.3s cubic-bezier(.4,2,.6,1), box-shadow 0.2s;
       text-align: center;
       cursor: pointer;
+      user-select: none;
+      border: 1.5px solid var(--primary);
+      position: relative;
+      overflow: hidden;
+      min-height: 120px;
+      animation: fadeInScale 1.1s;
     }
     .repo-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(246, 146, 132, 0.3);
+      transform: translateY(-7px) scale(1.04) rotate(-1deg);
+      box-shadow: 0 20px 40px 0 var(--primary);
+      border-color: var(--secondary);
+      background: linear-gradient(120deg, var(--glass) 60%, var(--glass-dark) 100%);
     }
     .repo-card h5 a {
-      color: #f06d57;
-      font-size: 1.3rem;
+      color: var(--primary);
+      font-size: 1.25rem;
       font-weight: 800;
       text-decoration: none;
+      user-select: text;
+      transition: color var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-content: center;
+      word-break: break-word;      /* Ensures long words wrap */
+      white-space: normal;         /* Allow wrapping */
+      flex-wrap: wrap;             /* Wrap content if needed */
+      text-align: center;          /* Center text if wrapped */
     }
     .repo-card h5 a:hover {
-      color: #ff6f61;
+      color: var(--secondary);
       text-decoration: underline;
     }
-
+    .repo-card .repo-lang {
+      display: inline-block;
+      margin-top: 0.7rem;
+      font-size: 1rem;
+      color: var(--secondary);
+      font-weight: 600;
+      background: rgba(44,182,125,0.09);
+      border-radius: 1rem;
+      padding: 0.2rem 0.8rem;
+      margin-bottom: 0.2rem;
+    }
+    .repo-card .repo-desc {
+      font-size: 1rem;
+      color: var(--text-dark);
+      opacity: 0.8;
+      margin-top: 0.5rem;
+      min-height: 2.2em;
+    }
+    [data-theme="dark"] .repo-card .repo-desc { color: var(--text-light); }
     footer {
-      background: linear-gradient(135deg, #f69284, #f06d57);
-      color: white;
+      background: linear-gradient(120deg, var(--primary) 60%, var(--secondary) 100%);
+      color: var(--text-light);
       text-align: center;
       padding: 1.2rem;
       font-weight: 700;
+      user-select: none;
+      border-radius: 2rem 2rem 0 0;
+      box-shadow: var(--shadow);
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
     }
-
+    /* Contact Modal */
+    .modal-content {
+      background: var(--glass);
+      border-radius: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 2px solid var(--primary);
+      color: var(--text-dark);
+      transition: background var(--transition), color var(--transition);
+      backdrop-filter: blur(8px);
+    }
+    [data-theme="dark"] .modal-content {
+      background: var(--glass-dark);
+      color: var(--text-light);
+    }
+    .modal-header, .modal-footer { border: none; }
+    .modal-title { font-weight: 800; color: var(--primary);}
+    .form-group label { font-weight: 600; }
+    .form-control {
+      border-radius: 1rem;
+      border: 1.5px solid var(--primary);
+      background: var(--glass);
+      color: var(--text-dark);
+      transition: border var(--transition), background var(--transition), color var(--transition);
+      font-size: 1.05rem;
+    }
+    [data-theme="dark"] .form-control {
+      background: var(--glass-dark);
+      color: var(--text-light);
+    }
+    .form-control:focus {
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 2px var(--secondary);
+      background: var(--glass);
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary) 60%, var(--secondary) 100%);
+      border: none;
+      color: var(--text-light);
+      font-weight: 700;
+      border-radius: 1.2rem;
+      padding: 0.6rem 1.5rem;
+      font-size: 1.1rem;
+      transition: background var(--transition), color var(--transition), transform 0.2s;
+      box-shadow: 0 2px 8px rgba(127,90,240,0.08);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(90deg, var(--secondary) 60%, var(--primary) 100%);
+      color: var(--bg-dark);
+      transform: scale(1.05);
+    }
+    .form-icon {
+      color: var(--primary);
+      margin-right: 0.5rem;
+      font-size: 1.2rem;
+    }
+    .emoji {
+      font-size: 1.3em;
+      margin-right: 0.3em;
+    }
+    /* Responsive */
     @media (max-width: 600px) {
-      header h1 {
-        font-size: 2.3rem;
-      }
-      header p {
-        font-size: 1rem;
-      }
-      .filter-grid {
-        flex-direction: column;
-        align-items: center;
-      }
+      header h1 { font-size: 2.1rem; }
+      header p { font-size: 1rem; }
+      .filter-grid { flex-direction: column; align-items: center; }
+      main { padding: 1.2rem 0.5rem; }
+      section h2 { font-size: 1.3rem; }
+      .repo-card { padding: 1.1rem 0.5rem; }
+      footer { font-size: 0.95rem; }
     }
   </style>
 </head>
 <body>
 <header>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode"><i class="fas fa-moon"></i></button>
   <img id="avatar" src="" alt="Profile Picture">
-  <h1 id="fullname">Loading...</h1>
+  <h1 id="fullname"><span class="emoji">👋</span>Loading...</h1>
   <p id="bio"></p>
   <div class="contact-links">
-    <a href="mailto:heinn2004@gmail.com"><i class="fas fa-envelope"></i>heinn2004@gmail.com</a>
-    <a href="https://www.linkedin.com/in/heinn-htet-zan-040794291" target="_blank"><i class="fab fa-linkedin"></i>LinkedIn</a>
+    <a href="mailto:heinn2004@gmail.com"><i class="fas fa-envelope"></i>Email</a>
+    <a href="https://www.linkedin.com/in/heinn-htet-zan-040794291" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i>LinkedIn</a>
+    <button class="btn btn-light" data-toggle="modal" data-target="#aboutModal" aria-label="Open About Me Modal"><i class="fas fa-info-circle"></i> About Me</button>
+    <button class="btn btn-light" data-toggle="modal" data-target="#contactModal" aria-label="Open Contact Me Modal"><i class="fas fa-paper-plane"></i> Contact Me</button>
   </div>
 </header>
 
 <main>
   <section>
-    <h2><i class="fas fa-filter"></i> Filter Repositories Based On My Skills</h2>
-    <div id="skills" class="filter-grid"></div>
+    <h2><span class="emoji">🛠️</span><i class="fas fa-filter"></i> Filter Repositories Based On My Skills</h2>
+    <div id="skills" class="filter-grid" aria-live="polite" aria-label="Skill filters"></div>
   </section>
 
   <section>
-    <h2><i class="fab fa-github"></i> My Github Repositories</h2>
-    <div id="repos"></div>
+    <h2><span class="emoji">📦</span><i class="fab fa-github"></i> My Github Repositories</h2>
+    <div id="repos" aria-live="polite" aria-label="GitHub repositories">Loading repositories...</div>
   </section>
 </main>
 
 <footer>
+  <span class="emoji">🚀</span>
   &copy; <span id="year"></span> Koheinn. All rights reserved.
+  <span class="emoji">💜</span>
 </footer>
 
+<!-- About Me Modal -->
+<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="font-family: 'Fira Sans', sans-serif;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="aboutModalLabel"><span class="emoji">👨‍💻</span> About Me</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" title="Close About Me">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>I am a dedicated computing professional with NCC Level 3, 4, and 5 Diplomas in Computing, and I’ve enhanced my skills through AI Engineering and Data Science courses from 365 Data Science, as well as full-stack web development training—including PHP Laravel, JavaScript, React, Node.js, Express, Redux, TypeScript, and cross-platform development—at Fairway Institute.</p>
+        <p>🌟 Passionate about technology and continuous learning!</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close About Me Modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Contact Me Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1" role="dialog" aria-labelledby="contactModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <form class="modal-content" id="contactForm" autocomplete="off">
+      <div class="modal-header">
+        <h5 class="modal-title" id="contactModalLabel"><span class="emoji">📬</span> Contact Me</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" title="Close Contact Me">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="contactAlert" style="display:none;" class="alert alert-success"></div>
+        <div class="form-group">
+          <label for="contactName"><i class="fas fa-user form-icon"></i>Name</label>
+          <input type="text" class="form-control" id="contactName" required maxlength="50" placeholder="Your Name">
+        </div>
+        <div class="form-group">
+          <label for="contactEmail"><i class="fas fa-envelope form-icon"></i>Email</label>
+          <input type="email" class="form-control" id="contactEmail" required maxlength="80" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label for="contactMsg"><i class="fas fa-comment-dots form-icon"></i>Message</label>
+          <textarea class="form-control" id="contactMsg" rows="3" required maxlength="500" placeholder="Type your message..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Send</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close Contact Me Modal">Close</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" ></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" ></script>
 <script>
+  // --- THEME TOGGLE ---
+  const themeToggle = document.getElementById('themeToggle');
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    themeToggle.innerHTML = theme === 'dark'
+      ? '<i class="fas fa-sun"></i>'
+      : '<i class="fas fa-moon"></i>';
+    themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+  }
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    setTheme(current === 'dark' ? 'light' : 'dark');
+  }
+  themeToggle.addEventListener('click', toggleTheme);
+  // On load, set theme from localStorage or system
+  (function() {
+    const saved = localStorage.getItem('theme');
+    if (saved) setTheme(saved);
+    else if (window.matchMedia('(prefers-color-scheme: dark)').matches) setTheme('dark');
+    else setTheme('light');
+  })();
+
+  // --- GITHUB PROFILE/REPOS ---
   const username = 'Koheinn';
   const userApi = `https://api.github.com/users/${username}`;
   const reposApi = `https://api.github.com/users/${username}/repos?per_page=100`;
@@ -215,6 +511,9 @@
     const span = document.createElement('span');
     span.className = 'skill-badge';
     span.textContent = skill;
+    span.setAttribute('tabindex', '0');
+    span.setAttribute('role', 'button');
+    span.setAttribute('aria-pressed', selectedSkills.has(skill));
     span.addEventListener('click', () => {
       span.classList.toggle('selected');
       if (selectedSkills.has(skill)) {
@@ -223,6 +522,12 @@
         selectedSkills.add(skill);
       }
       renderRepos();
+    });
+    span.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        span.click();
+      }
     });
     return span;
   }
@@ -235,9 +540,24 @@
     link.href = repo.html_url;
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
-    link.textContent = repo.name;
+    link.innerHTML = `<i class="fab fa-github"></i> ${repo.name}`;
     title.appendChild(link);
     card.appendChild(title);
+
+    // Language badge
+    if (repo.language) {
+      const lang = document.createElement('div');
+      lang.className = 'repo-lang';
+      lang.innerHTML = `<i class="fas fa-code"></i> ${languageSkillMap[repo.language] || repo.language}`;
+      card.appendChild(lang);
+    }
+    // Description
+    if (repo.description) {
+      const desc = document.createElement('div');
+      desc.className = 'repo-desc';
+      desc.textContent = repo.description;
+      card.appendChild(desc);
+    }
     return card;
   }
 
@@ -253,7 +573,7 @@
       });
     }
     if (filtered.length === 0) {
-      reposContainer.textContent = 'No repositories found for selected skill(s).';
+      reposContainer.textContent = '😕 No repositories found for selected skill(s).';
       return;
     }
     filtered.forEach(repo => reposContainer.appendChild(createRepoCard(repo)));
@@ -274,7 +594,7 @@
     try {
       const user = await fetchJson(userApi);
       document.getElementById('avatar').src = user.avatar_url;
-      document.getElementById('fullname').textContent = user.name || user.login;
+      document.getElementById('fullname').innerHTML = `<span class="emoji">👋</span> ${user.name || user.login}`;
       document.getElementById('bio').textContent = user.bio || '';
     } catch (e) {
       console.error('Profile load failed:', e);
@@ -296,13 +616,46 @@
       renderRepos();
     } catch (e) {
       console.error('Repos load failed:', e);
-      document.getElementById('repos').textContent = 'Failed to load repositories.';
+      const reposContainer = document.getElementById('repos');
+      reposContainer.textContent = 'Failed to load repositories.';
     }
   }
 
   document.getElementById('year').textContent = new Date().getFullYear();
   loadProfile();
   loadRepos();
+
+  // --- CONTACT FORM ---
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Simple validation
+    const name = document.getElementById('contactName').value.trim();
+    const email = document.getElementById('contactEmail').value.trim();
+    const msg = document.getElementById('contactMsg').value.trim();
+    const alertBox = document.getElementById('contactAlert');
+    if (!name || !email || !msg) {
+      alertBox.style.display = 'block';
+      alertBox.className = 'alert alert-danger';
+      alertBox.textContent = 'Please fill in all fields!';
+      return;
+    }
+    // Simulate sending (you can integrate with EmailJS or Formspree for real sending)
+    alertBox.style.display = 'block';
+    alertBox.className = 'alert alert-success';
+    alertBox.innerHTML = '<i class="fas fa-check-circle"></i> Thank you, your message has been sent!';
+    setTimeout(() => {
+      $('#contactModal').modal('hide');
+      alertBox.style.display = 'none';
+      document.getElementById('contactForm').reset();
+    }, 1800);
+  });
+
+  // Reset alert on modal open
+  $('#contactModal').on('show.bs.modal', function () {
+    document.getElementById('contactAlert').style.display = 'none';
+    document.getElementById('contactForm').reset();
+  });
 </script>
 </body>
 </html>
+
