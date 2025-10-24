@@ -130,7 +130,7 @@
       animation: fadeInUp 1.2s 0.6s both;
     }
     .contact-links a, .contact-links button {
-      color: var(--primary); /* Changed from var(--text-light) for better contrast in light mode */
+      color: var(--primary);
       font-weight: bold;
       text-decoration: none;
       background: var(--glass);
@@ -150,12 +150,11 @@
     }
     [data-theme="dark"] .contact-links a,
     [data-theme="dark"] .contact-links button {
-      color: var(--text-light); /* Keep bright in dark mode */
+      color: var(--text-light);
       background: var(--glass-dark);
     }
     .contact-links a:active, .contact-links button:active {
       filter: brightness(0.95);
-      /* Prevent color from becoming dull in dark mode */
       color: inherit !important;
       background: inherit !important;
     }
@@ -270,10 +269,10 @@
       align-items: center;
       gap: 0.5rem;
       justify-content: center;
-      word-break: break-word;      /* Ensures long words wrap */
-      white-space: normal;         /* Allow wrapping */
-      flex-wrap: wrap;             /* Wrap content if needed */
-      text-align: center;          /* Center text if wrapped */
+      word-break: break-word;
+      white-space: normal;
+      flex-wrap: wrap;
+      text-align: center;
     }
     .repo-card h5 a:hover {
       color: var(--secondary);
@@ -315,7 +314,6 @@
       justify-content: center;
       gap: 0.7rem;
     }
-    /* Contact Modal */
     .modal-content {
       background: var(--glass);
       border-radius: 1.5rem;
@@ -374,7 +372,6 @@
       font-size: 1.3em;
       margin-right: 0.3em;
     }
-    /* Responsive */
     @media (max-width: 600px) {
       header h1 { font-size: 2.1rem; }
       header p { font-size: 1rem; }
@@ -460,7 +457,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <div id="contactAlert" style="display:none;" class="alert alert-success"></div>
+        <div id="contactAlert" style="display:none;" class="alert"></div>
         <div class="form-group">
           <label for="contactName"><i class="fas fa-user form-icon"></i>Name</label>
           <input type="text" class="form-control" id="contactName" required maxlength="50" placeholder="Your Name">
@@ -485,15 +482,17 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" ></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" ></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
+  // Initialize EmailJS with your Public Key
+  (function(){emailjs.init('s-LvedVFqywmbICUm');})();
+
   // --- THEME TOGGLE ---
   const themeToggle = document.getElementById('themeToggle');
   function setTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
-    themeToggle.innerHTML = theme === 'dark'
-      ? '<i class="fas fa-sun"></i>'
-      : '<i class="fas fa-moon"></i>';
+    themeToggle.innerHTML = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
     themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
   }
   function toggleTheme() {
@@ -501,7 +500,6 @@
     setTheme(current === 'dark' ? 'light' : 'dark');
   }
   themeToggle.addEventListener('click', toggleTheme);
-  // On load, set theme from localStorage or system
   (function() {
     const saved = localStorage.getItem('theme');
     if (saved) setTheme(saved);
@@ -513,7 +511,6 @@
   const username = 'Koheinn';
   const userApi = `https://api.github.com/users/${username}`;
   const reposApi = `https://api.github.com/users/${username}/repos?per_page=100`;
-
   const languageSkillMap = {
     'PHP': 'PHP', 'JavaScript': 'JavaScript', 'Java': 'Java', 'Kotlin': 'Kotlin',
     'HTML': 'HTML', 'CSS': 'CSS', 'TypeScript': 'TypeScript', 'Python': 'Python',
@@ -521,10 +518,9 @@
     'Objective-C': 'Objective-C', 'Shell': 'Shell Scripting', 'Dockerfile': 'Docker',
     'Makefile': 'Make', 'C': 'C'
   };
-
   let allRepos = [];
   let selectedSkills = new Set();
-  let repoSearchQuery = ""; // <-- Add this line
+  let repoSearchQuery = "";
 
   function createSkillBadge(skill) {
     const span = document.createElement('span');
@@ -535,18 +531,12 @@
     span.setAttribute('aria-pressed', selectedSkills.has(skill));
     span.addEventListener('click', () => {
       span.classList.toggle('selected');
-      if (selectedSkills.has(skill)) {
-        selectedSkills.delete(skill);
-      } else {
-        selectedSkills.add(skill);
-      }
+      if (selectedSkills.has(skill)) selectedSkills.delete(skill);
+      else selectedSkills.add(skill);
       renderRepos();
     });
     span.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        span.click();
-      }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); span.click(); }
     });
     return span;
   }
@@ -562,15 +552,12 @@
     link.innerHTML = `<i class="fab fa-github"></i> ${repo.name}`;
     title.appendChild(link);
     card.appendChild(title);
-
-    // Language badge
     if (repo.language) {
       const lang = document.createElement('div');
       lang.className = 'repo-lang';
       lang.innerHTML = `<i class="fas fa-code"></i> ${languageSkillMap[repo.language] || repo.language}`;
       card.appendChild(lang);
     }
-    // Description
     if (repo.description) {
       const desc = document.createElement('div');
       desc.className = 'repo-desc';
@@ -584,8 +571,6 @@
     const reposContainer = document.getElementById('repos');
     reposContainer.innerHTML = '';
     let filtered = allRepos;
-
-    // Filter by selected skills
     if (selectedSkills.size > 0) {
       filtered = filtered.filter(repo => {
         if (!repo.language) return false;
@@ -593,8 +578,6 @@
         return selectedSkills.has(lang);
       });
     }
-
-    // Filter by search query
     if (repoSearchQuery.trim() !== "") {
       const q = repoSearchQuery.trim().toLowerCase();
       filtered = filtered.filter(repo =>
@@ -602,7 +585,6 @@
         (repo.description && repo.description.toLowerCase().includes(q))
       );
     }
-
     if (filtered.length === 0) {
       reposContainer.textContent = '😕 No repositories found for selected skill(s) or search.';
       return;
@@ -638,17 +620,14 @@
       const repos = await fetchJson(reposApi);
       allRepos = repos;
       const skills = new Set();
-      repos.forEach(r => {
-        if (r.language) skills.add(languageSkillMap[r.language] || r.language);
-      });
+      repos.forEach(r => { if (r.language) skills.add(languageSkillMap[r.language] || r.language); });
       const container = document.getElementById('skills');
       container.innerHTML = '';
       [...skills].sort().forEach(skill => container.appendChild(createSkillBadge(skill)));
       renderRepos();
     } catch (e) {
       console.error('Repos load failed:', e);
-      const reposContainer = document.getElementById('repos');
-      reposContainer.textContent = 'Failed to load repositories.';
+      document.getElementById('repos').textContent = 'Failed to load repositories.';
     }
   }
 
@@ -656,10 +635,9 @@
   loadProfile();
   loadRepos();
 
-  // --- CONTACT FORM ---
+  // --- CONTACT FORM (EmailJS) ---
   document.getElementById('contactForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    // Simple validation
     const name = document.getElementById('contactName').value.trim();
     const email = document.getElementById('contactEmail').value.trim();
     const msg = document.getElementById('contactMsg').value.trim();
@@ -670,15 +648,29 @@
       alertBox.textContent = 'Please fill in all fields!';
       return;
     }
-    // Simulate sending (you can integrate with EmailJS or Formspree for real sending)
     alertBox.style.display = 'block';
-    alertBox.className = 'alert alert-success';
-    alertBox.innerHTML = '<i class="fas fa-check-circle"></i> Thank you, your message has been sent!';
-    setTimeout(() => {
-      $('#contactModal').modal('hide');
-      alertBox.style.display = 'none';
-      document.getElementById('contactForm').reset();
-    }, 1800);
+    alertBox.className = 'alert alert-info';
+    alertBox.textContent = 'Sending...';
+    emailjs.send('service_3p55fij', 'template_1dbfpir', {
+      from_name: name,
+      from_email: email,
+      message: msg,
+      to_email: 'heinn2004@gmail.com'
+    }).then(function() {
+      alertBox.style.display = 'block';
+      alertBox.className = 'alert alert-success';
+      alertBox.innerHTML = '<i class="fas fa-check-circle"></i> Thank you, your message has been sent!';
+      setTimeout(function() {
+        $('#contactModal').modal('hide');
+        alertBox.style.display = 'none';
+        document.getElementById('contactForm').reset();
+      }, 1800);
+    }, function(err) {
+      console.error('EmailJS send error:', err);
+      alertBox.style.display = 'block';
+      alertBox.className = 'alert alert-danger';
+      alertBox.textContent = 'Failed to send message. Please try again later.';
+    });
   });
 
   // Reset alert on modal open
@@ -700,4 +692,3 @@
 </script>
 </body>
 </html>
-
