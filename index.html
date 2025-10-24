@@ -607,7 +607,7 @@
     try {
       const user = await fetchJson(userApi);
       document.getElementById('avatar').src = user.avatar_url;
-      document.getElementById('fullname').innerHTML = `<span class="emoji">👋</span> ${user.name || user.login}`;
+      document.getElementById('fullname').innerHTML = `<span class="emoji">👋Hello, Warmly Welcome from My Portfolio Page! I'm </span> ${user.name || user.login}`;
       document.getElementById('bio').textContent = user.bio || '';
     } catch (e) {
       console.error('Profile load failed:', e);
