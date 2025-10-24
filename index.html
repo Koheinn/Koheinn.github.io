@@ -652,10 +652,11 @@
     alertBox.className = 'alert alert-info';
     alertBox.textContent = 'Sending...';
     emailjs.send('service_3p55fij', 'template_1dbfpir', {
-      from_name: name,
-      from_email: email,
+      name: name,
+      email: email,
       message: msg,
-      to_email: 'heinn2004@gmail.com'
+      time: new Date().toLocaleString(),
+      title: 'Portfolio Contact Form'
     }).then(function() {
       alertBox.style.display = 'block';
       alertBox.className = 'alert alert-success';
