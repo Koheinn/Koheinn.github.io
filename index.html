@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Heinn Htet Zan's Portfolio</title>
+  <title>{{title}}</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -390,7 +390,7 @@
   <h1 id="fullname"><span class="emoji">👋</span>Loading...</h1>
   <p id="bio"></p>
   <div class="contact-links">
-    <a href="mailto:heinn2004@gmail.com"><i class="fas fa-envelope"></i>Email</a>
+    <a href="mailto:{{email}}"><i class="fas fa-envelope"></i>Email</a>
     <a href="https://www.linkedin.com/in/heinn-htet-zan-040794291" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i>LinkedIn</a>
     <button class="btn btn-light" data-toggle="modal" data-target="#aboutModal" aria-label="Open About Me Modal"><i class="fas fa-info-circle"></i> About Me</button>
     <button class="btn btn-light" data-toggle="modal" data-target="#contactModal" aria-label="Open Contact Me Modal"><i class="fas fa-paper-plane"></i> Contact Me</button>
@@ -421,7 +421,7 @@
 
 <footer>
   <span class="emoji">🚀</span>
-  &copy; <span id="year"></span> Koheinn. All rights reserved.
+  &copy; <span id="year"></span> {{name}}. All rights reserved.
   <span class="emoji">💜</span>
 </footer>
 
@@ -607,7 +607,7 @@
     try {
       const user = await fetchJson(userApi);
       document.getElementById('avatar').src = user.avatar_url;
-      document.getElementById('fullname').innerHTML = `<span class="emoji">👋</span> ${user.name || user.login}`;
+      document.getElementById('fullname').innerHTML = `<span class="emoji">👋</span> {{name}}`;
       document.getElementById('bio').textContent = user.bio || '';
     } catch (e) {
       console.error('Profile load failed:', e);
@@ -655,7 +655,9 @@
       from_name: name,
       from_email: email,
       message: msg,
-      to_email: 'heinn2004@gmail.com'
+      to_name: '{{name}}',
+      reply_to: email,
+      time: new Date().toISOString()
     }).then(function() {
       alertBox.style.display = 'block';
       alertBox.className = 'alert alert-success';
